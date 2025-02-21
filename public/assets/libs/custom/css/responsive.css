@@ -1,0 +1,105 @@
+@media (max-width: 1200px) {
+    .left-menu {
+        height: 100vh;
+        width: 0;
+        position: absolute;
+        /* box-shadow: 3px -1px 19px 1px #ddd; */
+        overflow-y: scroll;
+        background: white;
+        transition: .5s;
+        -webkit-transition: .5s;
+        -moz-transition: .5s;
+        -ms-transition: .5s;
+        -o-transition: .5s;
+        margin-top: 12px !important;
+        z-index: 99;
+    }
+    .content-wrapper {
+        margin-left: 0;
+    }
+    .left-menu.hide {
+        transition: .5s;
+        -webkit-transition: .5s;
+        -moz-transition: .5s;
+        -ms-transition: .5s;
+        -o-transition: .5s;
+        width: 200px;
+        position: fixed;
+        z-index: 99;
+    }
+
+    /* #daterange {
+        min-width: 230px !important;
+    } */
+}
+@media (min-width: 992px) {
+
+
+    #daterange {
+        min-width: 230px !important;
+    }
+}
+
+
+@media (max-width: 992px) {
+    .top-chart-earn {
+        margin: 10px 0px;
+    }
+
+}
+
+/* .navbar-item {
+    display: flex;
+    align-items: center;
+} */
+@media (max-width: 768px) {
+    .left-menu {
+        margin-top: 43px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .logo {
+        display: none;
+    }
+
+    .navbar-item {
+        position: absolute;
+        top: 0;
+        right: 0;
+        flex-direction: column;
+        z-index: 1000; 
+    }
+    .header-left {
+        position: absolute;
+        top: 7px;
+        left: 0;
+        flex-direction: column;
+        z-index: 1000; 
+    }
+    .left-menu{
+        z-index: 10000 !important;
+        margin-top: 10px !important;
+    }
+    .search-mt {
+        margin: 10px 0;
+    }
+    #filter-nav {
+        margin-top: 50px !important;
+    }
+    .navbar-expand-sm {
+        min-height: 52px !important;
+    }
+    .dashboard-mt {
+        margin-top: 90px;
+    }
+    .dataTables_paginate {
+        font-size: smaller ;
+    }
+    .card {
+        padding-right: 8px !important;
+        padding-left: 8px !important;
+        padding-top: 2px !important;
+    }
+
+}

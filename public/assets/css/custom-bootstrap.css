@@ -1,0 +1,82 @@
+/* Style for pagination links */
+.dataTables_paginate .paginate_button {
+    color: rgb(227, 0, 125) !important; /* Change text color */
+    border: 1px solid rgb(227, 0, 125) !important; /* Border color */
+    background-color: transparent; /* Transparent background */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+}
+
+/* Style for the current active page */
+.dataTables_paginate .paginate_button.current {
+    background-color: rgb(227, 0, 125) !important;
+    color: white !important; /* White text for the active page */
+}
+
+/* Style for disabled buttons (Previous/Next when disabled) */
+.dataTables_paginate .paginate_button.disabled {
+    color: rgb(227, 0, 125) !important;
+    opacity: 0.5; /* Slightly lighter for disabled buttons */
+}
+
+/* Hover effect for pagination links */
+.dataTables_paginate .paginate_button:hover:not(.current):not(.disabled) {
+    background-color: rgba(227, 0, 125, 0.1); /* Light pink background on hover */
+    color: rgb(245, 238, 242) !important; /* Pink text on hover */
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover{
+    background: rgb(246, 1, 140) !important; ;
+    color: white !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current{
+    border: 1px solid rgb(227, 0, 125) !important;
+    color: white !important;
+    background: rgb(227, 0, 125) !important;
+}
+/* .dataTables_length{
+    position: absolute  !important;
+    bottom: 5px  !important;
+    left: 40%  !important;
+} */
+.dt-buttons{
+    /* position: absolute !important;
+    top: -63px !important;
+    right: 95px !important; */
+
+    
+    /* display: flex !important;
+    justify-content: end !important;
+    gap: 2px !important;
+    margin-bottom: 7px !important; */ 
+}
+.dt-buttons button{
+    margin-bottom: 10px !important;
+    height: 32px !important;
+    /* width: 70px !important; */
+}
+
+
+#loader1 {
+    position: fixed; /* Stay in place */
+    left: 50%;
+    top: 50%;
+    z-index: 1000; /* Sit on top */
+    transform: translate(-50%, -50%);
+    display: none; /* Hidden by default */
+}
+/* btn btn-sm btn-primary excel */ 
+/* secondary */
+
+/* table.dataTable thead>tr>td.sorting_desc_disabled:after {
+    position: absolute;
+    display: block;
+    opacity: .125;
+    right: 10px;
+    line-height: 9px;
+    font-size: 1.5em !important;
+} */
+
+.dataTables_length >label {
+    display: flex !important;
+
+}

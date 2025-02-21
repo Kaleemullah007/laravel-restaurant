@@ -1,0 +1,38 @@
+public function html(): HtmlBuilder
+{
+    return $this->builder()
+                ->setTableId('learningplanquestiontypes-table')
+                ->columns($this->getColumns())
+                ->minifiedAjax('', null, [
+                    'data' => 'function(d) {
+                        d.questionType = $("#questionType").val();
+                    }'
+                ])
+                ->dom('Bfrtip')
+                ->orderBy(1)
+                ->selectStyleSingle()
+                ->parameters([
+                    'initComplete' => 'function(settings, json) {
+                        // Add dropdown filter
+                        $("#learningplanquestiontypes-table_filter").append(\'<label>Type: <select id="questionType" class="form-control">' +
+                            \'<option value="">All Types</option>\' +
+                            \'<option value="type1">Type 1</option>\' +
+                            \'<option value="type2">Type 2</option>\' +
+                        \'</select></label>\');
+
+                        // Attach event listener to dropdown filter
+                        $("#questionType").on("change", function() {
+                            // Redraw table with the new filter
+                            $("#learningplanquestiontypes-table").DataTable().ajax.reload();
+                        });
+                    }'
+                ])
+                ->buttons([
+                    Button::make('excel'),
+                    Button::make('csv'),
+                    Button::make('pdf'),
+                    Button::make('print'),
+                    Button::make('reset'),
+                    Button::make('reload')
+                ]);
+}

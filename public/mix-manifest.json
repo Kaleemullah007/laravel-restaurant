@@ -1,0 +1,11 @@
+{
+    "/js/app.js": "/js/app.js",
+    "/js/bootstrap.bundle.min.js": "/js/bootstrap.bundle.min.js",
+    "/js/jquery.min.js": "/js/jquery.min.js",
+    "/js/switch.min.js": "/js/switch.min.js",
+    "/js/select2.full.min.js": "/js/select2.full.min.js",
+    "/js/custom.js": "/js/custom.js",
+    "/js/apexcharts.min.js": "/js/apexcharts.min.js",
+    "/js/chart.js": "/js/chart.js",
+    "/js/datatables.min.js": "/js/datatables.min.js"
+}
