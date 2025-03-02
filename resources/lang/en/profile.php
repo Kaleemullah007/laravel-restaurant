@@ -23,4 +23,4 @@ return [
     'Yes' => 'Yes',
     'NO' => 'No',
 
-    ];
+];

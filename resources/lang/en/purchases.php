@@ -28,4 +28,4 @@ return [
     'created_at' => 'created at',
     'action' => 'action',
 
-    ];
+];

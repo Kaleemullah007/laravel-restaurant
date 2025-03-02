@@ -46,4 +46,4 @@ return [
     'Pack' => 'Pack',
     'Pound' => 'Pound',
 
-    ];
+];
