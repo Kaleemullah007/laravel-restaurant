@@ -28,4 +28,4 @@ return [
     'product_code' => 'Product code',
     'action' => 'action',
 
-    ];
+];

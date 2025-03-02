@@ -15,4 +15,4 @@ return [
     'date' => 'date',
     'action' => 'action',
 
-    ];
+];

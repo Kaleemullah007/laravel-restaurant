@@ -24,4 +24,4 @@ return [
     'previous' => 'پچھلا',   // Previous button label
     'next' => 'اگلا',
 
-    ];
+];

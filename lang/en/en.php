@@ -45,16 +45,5 @@ return [
     'Order Status' => 'Order Status',
     'Name' => 'Name',
     'Username' => 'Username',
-    'Username' => 'Username',
-    'Username' => 'Username',
-    'Username' => 'Username',
-    'Username' => 'Username',
-    'Username' => 'Username',
-    'Username' => 'Username',
-    'Username' => 'Username',
-    'Username' => 'Username',
-    'Username' => 'Username',
-    'Username' => 'Username',
-    'Username' => 'Username',
 
 ];
