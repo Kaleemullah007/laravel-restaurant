@@ -6,6 +6,7 @@ use App\DataTables\ProductDataTable;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
+use App\Service\DealService;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,10 +14,13 @@ use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    public function __construct()
+    protected $dealService;
+
+    public function __construct(DealService $dealService)
     {
 
         $this->middleware(['auth', 'verified']);
+        $this->dealService = $dealService;
     }
 
     /**
@@ -159,34 +163,40 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request): RedirectResponse
     {
 
-        dd($request->validated());
         // dd(mime_content_type($request->file('image')->getPathName()));
-        $id = request('redirectid');
-
-        $data = $request->validated();
-
-        if ($request->hasFile('image')) {
-            // et the file with extension
-            $image = $request->file('image');
-
-            // Generate a unique file name
-            $filename = time().'.'.$image->getClientOriginalExtension();
-
-            // Store the image in the 'public/images' directory
-            $path = $image->move('images', $filename, 'public');
-
-            // Optionally, save the image path to the database
-            // Example: You can save the path $path in your database
-            $data['image'] = $path;
-
+        if(!$request->is_product_value){
+            $this->dealService->createDeal($request);
+            $product = 'Deal';
         }
-
-        $products = Product::create($data);
-        $request->session()->flash('success', 'Product created successfully.');
-        if ($id) {
-            return redirect('product?id='.$id);
+        else{
+            $id = request('redirectid');
+            $product = 'Product';
+            $data = $request->validated();
+    
+            if ($request->hasFile('image')) {
+                // et the file with extension
+                $image = $request->file('image');
+    
+                // Generate a unique file name
+                $filename = time().'.'.$image->getClientOriginalExtension();
+    
+                // Store the image in the 'public/images' directory
+                $path = $image->move('images', $filename, 'public');
+    
+                // Optionally, save the image path to the database
+                // Example: You can save the path $path in your database
+                $data['image'] = $path;
+    
+            }
+    
+            $products = Product::create($data);
+            $request->session()->flash('success', 'Product created successfully.');
+            if ($id) {
+                return redirect('product?id='.$id);
+            }
+    
         }
-
+        $request->session()->flash('success', $product.' created successfully.');
         return redirect('product');
     }
 

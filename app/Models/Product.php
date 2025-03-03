@@ -11,19 +11,7 @@ class Product extends Model
     use FilterByUser;
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'price',
-        'sale_price',
-        'stock',
-        'stock_alert',
-        'status',
-        'owner_id',
-        'image',
-        'product_code',
-        'variation',
-        'unit',
-    ];
+    protected $guarded = ['id'];
 
     public function SaleProduct()
     {
