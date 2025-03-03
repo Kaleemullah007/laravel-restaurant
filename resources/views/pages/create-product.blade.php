@@ -13,7 +13,7 @@
                 </div>
             </div>
             <hr>
-            {{-- @dd($errors->all()) --}}
+            {{-- @dd($errors->all(),old('is_product_value')) --}}
             <div class="row p-3">
                 <div class="shadow-css">
                    
@@ -29,10 +29,10 @@
                         @endif
                         <div class="col-sm-4 ps-0">
                             <input type="checkbox" class="py-0" name="is_product" id="is_product" data-toggle="toggle" data-on="Product"
-                                data-off="Deal" data-onstyle="info" data-offstyle="primary" checked >
-                                <input type="hidden" name="is_product_value" id="is_product_value" value="1">
+                                data-off="Deal" data-onstyle="info" data-offstyle="primary"  @if(old('is_product_value',1)==1) checked @endif  >
+                                <input type="hidden" name="is_product_value" id="is_product_value" value="{{old('is_product_value',0)}}"   >
                         </div>
-                        <div class="product_section" >  
+                        <div class="product_section" @if(old('is_product_value',1)==0) style="display: none" @endif >  
                         <div class="row mt-3">
                             <div class="col-lg-4 col-md-6 col-12 pt-1">
                                 <label for="product_code" class="form-label fs-6">{{ __('products.product_code') }}</label>
@@ -51,7 +51,7 @@
                                 <input type="text"
                                     class="form-control mb-2 border-dark @error('name') is-invalid @enderror" id="name"
                                     name="name" @if(placeholderVisible()) placeholder={{ __('products.Name')}}@endif value="{{ old('name') }}" autocomplete="name"
-                                    required >
+                                    >
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -96,7 +96,7 @@
                                 <input type="text" min="0"
                                     class="form-control mb-2 border-dark @error('price') is-invalid @enderror"
                                     id="price" name="price" @if(placeholderVisible()) placeholder={{ __('499')}}@endif value="{{ old('price') }}"
-                                    autocomplete="price" required >
+                                    autocomplete="price" >
                                 @error('price')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -108,7 +108,7 @@
                                 <input type="text" min="0"
                                     class="form-control mb-2 border-dark @error('sale_price') is-invalid @enderror"
                                     id="sale_price" name="sale_price" @if(placeholderVisible()) placeholder={{ __('999')}}@endif value="{{ old('sale_price') }}"
-                                    autocomplete="sale_price" required >
+                                    autocomplete="sale_price" >
                                 @error('sale_price')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -120,7 +120,7 @@
                                 <input type="text" min="0"
                                     class="form-control mb-2 border-dark @error('stock') is-invalid @enderror"
                                     id="stock" name="stock" @if(placeholderVisible()) placeholder={{ __('100')}}@endif value="{{ old('stock') }}"
-                                    autocomplete="stock" required >
+                                    autocomplete="stock" >
                                 @error('stock')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -132,7 +132,7 @@
                                 <input type="text" min="0"
                                     class="form-control mb-2 border-dark @error('stock_alert') is-invalid @enderror"
                                     id="stock_alert" name="stock_alert" @if(placeholderVisible()) placeholder={{ __('10')}}@endif value="{{ old('stock_alert') }}"
-                                    autocomplete="stock_alert" required >
+                                    autocomplete="stock_alert" >
                                 @error('stock_alert')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -160,7 +160,7 @@
                         </div>
 {{--  Deals --}}
 
-<div class="deal_section hide" style="display: none">
+<div class="deal_section hide"    @if(old('is_product_value',1)==1) style="display: none" @endif >
 <div class="row mt-3">
     <!-- Name of Deal -->
     <div class="col-lg-4 col-md-6 col-12 pt-1">
@@ -168,7 +168,7 @@
         <input type="text"
             class="form-control mb-2 border-dark @error('deal_name') is-invalid @enderror"
             id="deal_name" name="deal_name" value="{{ old('deal_name') }}" autocomplete="deal_name"
-            required>
+            >
         @error('deal_name')
         <span class="invalid-feedback" role="alert">
             <strong>{{ $message }}</strong>
@@ -182,7 +182,7 @@
         <input type="text"
             class="form-control mb-2 border-dark @error('deal_code') is-invalid @enderror"
             id="deal_code" name="deal_code" value="{{ old('deal_code') }}" autocomplete="deal_code"
-            required>
+            >
         @error('deal_code')
         <span class="invalid-feedback" role="alert">
             <strong>{{ $message }}</strong>
@@ -214,7 +214,7 @@
         <label for="start_time" class="form-label fs-6">{{ __('deals.Start_Time') }}</label>
         <input type="datetime-local"
             class="form-control mb-2 border-dark @error('start_time') is-invalid @enderror"
-            id="start_time" name="start_time" value="{{ old('start_time') }}" required>
+            id="start_time" name="start_time" value="{{ old('start_time') }}" >
         @error('start_time')
         <span class="invalid-feedback" role="alert">
             <strong>{{ $message }}</strong>
@@ -227,7 +227,7 @@
         <label for="end_time" class="form-label fs-6">{{ __('deals.End_Time') }}</label>
         <input type="datetime-local"
             class="form-control mb-2 border-dark @error('end_time') is-invalid @enderror"
-            id="end_time" name="end_time" value="{{ old('end_time') }}" required>
+            id="end_time" name="end_time" value="{{ old('end_time') }}" >
         @error('end_time')
         <span class="invalid-feedback" role="alert">
             <strong>{{ $message }}</strong>
@@ -240,7 +240,7 @@
         <label for="deal_price" class="form-label fs-6">{{ __('deals.Deal_Price') }}</label>
         <input type="text"
             class="form-control mb-2 border-dark @error('deal_price') is-invalid @enderror"
-            id="deal_price" name="deal_price" value="{{ old('deal_price') }}" required>
+            id="deal_price" name="deal_price" value="{{ old('deal_price') }}" >
         @error('deal_price')
         <span class="invalid-feedback" role="alert">
             <strong>{{ $message }}</strong>

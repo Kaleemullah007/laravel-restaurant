@@ -46,26 +46,16 @@ class DealService
                 'is_swappable' => isset($prodcut['is_swappable']) ? ($prodcut['is_swappable'] == 'on' ? true : false) : false,
                 'owner_id' => $request->owner_id,
             ];
-
         }
         $deal_data['price'] = $price;
         if ($request->hasFile('image')) {
-            // et the file with extension
             $image = $request->file('image');
-
-            // Generate a unique file name
             $filename = time().'.'.$image->getClientOriginalExtension();
-
-            // Store the image in the 'public/images' directory
             $path = $image->move('images', $filename, 'public');
-
-            // Optionally, save the image path to the database
-            // Example: You can save the path $path in your database
             $deal_data['image'] = $path;
 
         }
-        // $deal_data = $all_data;
-
+  
       
         $product = Product::create($deal_data);
 
