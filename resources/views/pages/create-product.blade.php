@@ -16,7 +16,7 @@
             {{-- @dd($errors->all()) --}}
             <div class="row p-3">
                 <div class="shadow-css">
-                    @dd($errors->all());
+                   
                     @include('message')
                     <form method="POST" action="{{ route('product.store') }}" enctype="multipart/form-data">
                         @csrf
