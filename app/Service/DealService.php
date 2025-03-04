@@ -40,9 +40,10 @@ class DealService
             $price += $fProduct->sale_price * $prodcut['quantity'];
             $deal_products[] = [
                 'product_name' => $fProduct->name,
-                'price' => $fProduct->price,
-                'discount_price' => $fProduct->price,
+                'price' => $fProduct->sale_price,
+                'discount_price' => $fProduct->sale_price,
                 'quantity' => $prodcut['quantity'],
+                'deal_product_id' => $prodcut['product_id'],
                 'is_swappable' => isset($prodcut['is_swappable']) ? ($prodcut['is_swappable'] == 'on' ? true : false) : false,
                 'owner_id' => $request->owner_id,
             ];
@@ -97,9 +98,9 @@ class DealService
         
         // Get existing deal products
         $existing_deal_products = DealProduct::where('product_id', $deal->id)
-            ->pluck('id', 'product_id')
+            ->pluck('id', 'deal_product_id')
             ->toArray();
-        dd($existing_deal_products,$deal_products_data);
+        // dd($deal_products_data,$existing_deal_products);
         $deal_products_to_update = [];
         $deal_products_to_create = [];
         
@@ -109,9 +110,10 @@ class DealService
             
             $product_data = [
                 'product_name' => $fProduct->name,
-                'price' => $fProduct->price,
-                'discount_price' => $fProduct->price,
+                'price' => $fProduct->sale_price,
+                'discount_price' => $fProduct->sale_price,
                 'quantity' => $product['quantity'],
+                'deal_product_id' => $product['product_id'],
                 'is_swappable' => isset($product['is_swappable']) ? ($product['is_swappable'] == 'on' ? true : false) : false,
                 'owner_id' => $request->owner_id,
             ];
@@ -132,7 +134,7 @@ class DealService
         $deal_data['price'] = $price;
 
 
-        // dd($deal_products_data,$deal_data,$price);
+        // dd($deal_products_data,$existing_deal_products,$price);
         if ($request->hasFile('image')) {
             // Delete old image if exists
             if ($deal->image && file_exists(public_path($deal->image))) {
@@ -145,8 +147,9 @@ class DealService
             $deal_data['image'] = $path;
         }
 
+        // dd(array_values($existing_deal_products));
         // Update the deal
-      
+        // dd($existing_deal_products);
         $deal->update($deal_data);
 
         // Update existing products
@@ -158,10 +161,10 @@ class DealService
         if (!empty($deal_products_to_create)) {
             DealProduct::insert($deal_products_to_create);
         }
-        dd($existing_deal_products);
+       
         // Delete products that are no longer in the deal
         if (!empty($existing_deal_products)) {
-            dd($existing_deal_products);
+           
             DealProduct::whereIn('id', array_values($existing_deal_products))->delete();
         }
 

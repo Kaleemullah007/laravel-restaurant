@@ -342,30 +342,30 @@
 
                                     @endphp
                                     @foreach($dealsProducts as $key => $pro)
-                                    <tr id="dp-{{$pro['product_id']}}" data-id={{$pro['product_id']}}>
+                                    <tr id="dp-{{$pro['deal_product_id']}}" data-id={{$pro['deal_product_id']}}>
                                         <td>{{$pro['name']}}<input type="hidden"
-                                                name="productss[{{$pro['product_id']}}][product_id]"
-                                                value="{{$pro['product_id']}}" id=""></td>
+                                                name="productss[{{$pro['deal_product_id']}}][product_id]"
+                                                value="{{$pro['deal_product_id']}}" id=""></td>
 
                                         <td>{!! image('', $pro['image'], ['class=" border border-1"', 'style="height:
                                             30px; width: 30px !important"']) !!}</td>
-                                        <td class="productprice">{{$pro['price']}}
-                                            <input type="hidden" name="productss[{{$pro['product_id']}}][sale_price]"
+                                        <td class="productprice">{{$pro['sprice']}}
+                                            <input type="hidden" name="productss[{{$pro['deal_product_id']}}][sale_price]"
                                                 value="{{$pro['sale_price']}}" id="">
-                                            <input type="hidden" name="productss[{{$pro['product_id']}}][name]"
+                                            <input type="hidden" name="productss[{{$pro['deal_product_id']}}][name]"
                                                 value="{{$pro['product_name']}}" id="">
-                                            <input type="hidden" name="productss[{{$pro['product_id']}}][price]"
+                                            <input type="hidden" name="productss[{{$pro['deal_product_id']}}][price]"
                                                 value="{{$pro['sale_price']}}" id="">
-                                            <input type="hidden" name="productss[{{$pro['product_id']}}][image]"
+                                            <input type="hidden" name="productss[{{$pro['deal_product_id']}}][image]"
                                                 value="{{$pro['image']}}" id="">
                                         </td>
                                         <td> <input type="number" class="quantity"
-                                                name="productss[{{$pro['product_id']}}][quantity]"
+                                                name="productss[{{$pro['deal_product_id']}}][quantity]"
                                                 value="{{$pro['quantity']}}"></td>
                                         <td> <input type="checkbox" class="is_swappable"
-                                                name="productss[{{$pro['product_id']}}][is_swappable]" @if(
+                                                name="productss[{{$pro['deal_product_id']}}][is_swappable]" @if(
                                                 isset($pro['is_swappable'])) checked @endif></td>
-                                        <td onclick="removePRoduct({{$pro['product_id']}})">remove</td>
+                                        <td onclick="removePRoduct({{$pro['deal_product_id']}})">remove</td>
                                     </tr>
                                     @endforeach
 

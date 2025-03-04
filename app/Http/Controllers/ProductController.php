@@ -214,9 +214,7 @@ class ProductController extends Controller
     public function edit(Product $product): View
     {
 
-        $product->load('dealProducts');
-       
-        // dd($product);
+        $product->load('dealProducts:deal_products.price as sprice,deal_products.*,products.*');
         $products = Product::where('id', '!=', $product->id)->latest()->get();
         return view('pages.edit-product', compact('product','products'));
 

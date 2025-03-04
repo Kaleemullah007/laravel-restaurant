@@ -31,7 +31,7 @@ class Product extends Model
     public function dealProducts()
     {
         return $this->hasMany(DealProduct::class)
-        ->join('products', 'products.id', '=', 'deal_products.product_id');
+        ->join('products', 'products.id', '=', 'deal_products.deal_product_id');
     }
 
 
