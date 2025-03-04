@@ -20,6 +20,6 @@
 @endif
 @if ($errors->any())
 <div class="alert alert-danger">
-    Check the following errors :(
+    Check the following errors :( {{ $errors->first()}}
 </div>
 @endif

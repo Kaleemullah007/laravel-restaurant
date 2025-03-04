@@ -299,6 +299,26 @@
                 </tr>
             </thead>
             <tbody id="product-details">
+
+            @if(old('productss'))
+
+            @foreach(old('productss') as $key => $product)
+            <tr id="dp-{{$product['product_id']}}" data-id={{$product['product_id']}}>
+                <td>{{$product['name']}}<input type="hidden" name="productss[{{$product['product_id']}}][product_id]" value="{{$product['product_id']}}" id=""></td>
+            
+                <td>{!! image('', $product['image'], ['class=" border border-1"', 'style="height: 30px; width: 30px !important"']) !!}</td>
+                <td class="productprice">{{$product['price']}}
+                    <input type="hidden" name="productss[{{$product['product_id']}}][sale_price]" value="{{$product['sale_price']}}" id="">
+                    <input type="hidden" name="productss[{{$product['product_id']}}][name]" value="{{$product['name']}}" id="">
+                    <input type="hidden" name="productss[{{$product['product_id']}}][price]" value="{{$product['sale_price']}}" id="">
+                    <input type="hidden" name="productss[{{$product['product_id']}}][image]" value="{{$product['image']}}" id="">
+                </td>
+                <td > <input type="number" class="quantity" name="productss[{{$product['product_id']}}][quantity]" value="{{$product['quantity']}}"></td>
+                <td > <input type="checkbox" class="is_swappable" name="productss[{{$product['product_id']}}][is_swappable]"  @if( isset($product['is_swappable'])) checked @endif ></td>
+                <td onclick="removePRoduct({{$product['product_id']}})">remove</td>
+            </tr>
+            @endforeach
+            @endif
                 {{-- <tr>
                     <td colspan="5" class="text-center">{{ __('deals.No_Product_Selected') }}</td>
                 </tr> --}}

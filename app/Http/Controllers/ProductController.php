@@ -213,7 +213,12 @@ class ProductController extends Controller
      */
     public function edit(Product $product): View
     {
-        return view('pages.edit-product', compact('product'));
+
+        $product->load('dealProducts');
+       
+        // dd($product);
+        $products = Product::where('id', '!=', $product->id)->latest()->get();
+        return view('pages.edit-product', compact('product','products'));
 
     }
 
@@ -224,9 +229,14 @@ class ProductController extends Controller
     {
 
         $this->authorize('update', $product);
-
+        $tproduct = 'Product';
         $data = $request->validated();
-
+        if(!$request->is_product_value){
+            $this->dealService->updateDeal($request,$product);
+            $tproduct = 'Deal';
+           
+        }
+        else{
         if ($request->hasFile('image')) {
             // et the file with extension
             $image = $request->file('image');
@@ -244,8 +254,9 @@ class ProductController extends Controller
             unset($data['image']);
         }
         $products = Product::where('id', $product->id)->update($data);
-        $request->session()->flash('success', 'Product updated successfully.');
-
+       
+    }
+        $request->session()->flash('success', "$tproduct updated successfully.");
         //    return redirect('product/'.$product->id.'/edit');
         return to_route('product.index');
     }

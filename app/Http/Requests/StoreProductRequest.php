@@ -23,6 +23,7 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
 
+       
         $deal = [
             'deal_name' => 'required',
             'start_time' => 'required',
@@ -30,9 +31,9 @@ class StoreProductRequest extends FormRequest
             'deal_price' => 'required',
             'status' => 'required',
             'productss' => 'required|array',
-            'products.*.product_id' => 'required|numeric',
-            'products.*.qty' => 'required|decimal:0,2|gte:1',
-            'products.*.is_swappable' => 'nullable|boolean',
+            'productss.*.product_id' => 'required|numeric',
+            'productss.*.quantity' => 'required|decimal:0,2|gte:1',
+            'productss.*.is_swappable' => 'nullable|in:true,false,1,0,on,off',
             'is_always' => 'nullable|boolean',
             'owner_id' => 'required',
             'is_product_value' => 'required|boolean',
