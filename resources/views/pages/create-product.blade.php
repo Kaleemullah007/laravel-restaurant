@@ -75,6 +75,7 @@
                                 <select
                                     class="form-select mb-2 border-dark @error('unit') is-invalid @enderror"
                                     name="unit" id="unit" autocomplete="unit" >
+                                    <option value="deal" @selected(old('unit')=="D")>Deal</option>
                                     <option value="kg" @selected(old('unit')=="kg")>{{ __('sales.Kilogram')}}</option>
                                     <option value="g" @selected(old('unit')=="g")>{{ __('sales.Gram')}}</option>
                                     <option value="L" @selected(old('unit')=="L")>{{ __('sales.Liter')}}</option>

@@ -337,8 +337,8 @@
                 @endphp
                 @foreach ($products as $product)
                     <div class="col-lg-2 col-md-4 col-6 mt-2">
-                        <div class="card rounded border-1 border-dark pb-3" id="original_product{{ $product->id }}"
-                            onclick="addProductToCart({{ $product->id }})" style="height: 100% !important;">
+                        <div class="card rounded border-1 border-dark pb-3" id="original_product{{ $product->id }}" rel="product_type{{$product->is_deal}}"
+                            onclick="addProductToCart({{ $product->id }},{{$product->is_deal}})" style="height: 100% !important;">
                             {{-- <img src="/assets/images/img7.png" class="card-img-top position-relative" alt="..."> --}}
                             {!! image('', $product->image, [
                                 'class="card-img-top position-relative"',
@@ -347,8 +347,8 @@
 
 
 
-                            <span class="position-css-1 badge fw-light rounded-pill bg-dark ">
-                            <span id="stock_product{{ $product->id }}">{{ $product->stock }}</span>
+                            <span class="position-css-1 badge fw-light @if($product->is_deal)  rounded-pill bg-dark  @endif ">
+                            <span id="stock_product{{ $product->id }}">@if($product->is_deal) {{$product->stock }} @endif</span>
                             {{ $product->unit }}
                                 </span>
                                 
