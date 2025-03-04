@@ -194,13 +194,15 @@ class SaleController extends Controller
     {
         $sale = Sale::with('Products', 'Customer')->latest()->first();
         $hide = true;
-        $products = Product::where('stock', '>', 0)->latest()->get();
-        $deals = Deal::where('status', true)->whereDate('start_time', '<=', Carbon::now())
-            ->whereDate('end_time', '>=', Carbon::now())->latest()->get();
+        $products = Product::latest()->get();
+        // $deals = Deal::where('status', true)
+        // // ->whereDate('start_time', '<=', Carbon::now())
+        // //     ->whereDate('end_time', '>=', Carbon::now())
+        //     ->latest()->get();
         $customers = Customer::where('user_type', 'customer')
             ->get();
 
-        return view('pages.pos', compact('products', 'customers', 'sale', 'deals'));
+        return view('pages.pos', compact('products', 'customers', 'sale'));
     }
 
     /**
@@ -647,12 +649,12 @@ class SaleController extends Controller
 
     public function addNewRowPos(Request $request)
     {
-        $product = Product::where('stock', '>', 0)->where('id', $request->product_id)->first();
-        $deals = Deal::where('status', true)
-            ->whereDate('start_time', '<=', Carbon::now())
-            ->whereDate('end_time', '>=', Carbon::now())
-            ->where('id', $request->deal_id)
-            ->latest()->first();
+        $product = Product::where('id', $request->product_id)->first();
+        // $deals = Deal::where('status', true)
+        //     ->whereDate('start_time', '<=', Carbon::now())
+        //     ->whereDate('end_time', '>=', Carbon::now())
+        //     ->where('id', $request->deal_id)
+        //     ->latest()->first();
 
         $html = view('pages.pos-row', compact('product'))->render();
 

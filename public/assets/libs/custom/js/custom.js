@@ -704,6 +704,7 @@
 
      function addProductToCart(id) {
 
+        alert(id)
         let product = document.querySelector("#original_product"+id);
         product.style.pointerEvents = "none";
        
@@ -729,7 +730,7 @@
             
             posCalcualtePrice();
         }else{
-
+alert('s')
             $.ajax({
 
               type: 'get',
@@ -747,8 +748,8 @@
 
                 let  actual_qty = $("#original_stock_product"+id).val();
                 let  current_qty = $("#cart_product_qty_"+id).val();
-                remaining_qty = parseFloat(actual_qty).toFixed(2)-parseFloat(current_qty).toFixed(2);
-                $("#stock_product"+id).text(remaining_qty.toFixed(2));
+                // remaining_qty = parseFloat(actual_qty).toFixed(2)-parseFloat(current_qty).toFixed(2);
+                // $("#stock_product"+id).text(remaining_qty.toFixed(2));
 
 
 
