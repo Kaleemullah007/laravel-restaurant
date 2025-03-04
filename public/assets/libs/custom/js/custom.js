@@ -435,7 +435,7 @@
                     $('#searchable').html(data.html);
                     if ($("#barcodeActive").is(':checked')) {
                         if(data.products_count == 1)
-                        addProductToCart(data.product_id);
+                        addProductToCart(data.product_id,data.is_deal);
                     }
                    
                 },
@@ -636,7 +636,7 @@
         //  console.log(lastRow);
         product_id = id+'-product_id';
         selected_product = $("#"+product_id).val();
-        console.log(selected_product);
+        // console.log(selected_product);
         if(selected_product == 'Choose'){
             alert("Select Product to add new");
             return false;
@@ -702,29 +702,39 @@
      }
 
 
-     function addProductToCart(id) {
+     function addProductToCart(id,product_Type) {
+
 
         let product = document.querySelector("#original_product"+id);
         product.style.pointerEvents = "none";
        
-        if($('#setting-row'+id).length > 0){
+       
+        if ($("#setting-row"+id).length > 0){
 
             
             let  actual_qty = $("#original_stock_product"+id).val();
-          let  current_qty = $("#cart_product_qty_"+id).val();
-            old_value = parseFloat(current_qty) + 1;
-
-            remaining_qty = parseFloat(actual_qty)-old_value;
-            if(remaining_qty > 0){
+            let  current_qty = $("#cart_product_qty_"+id).val();
+            if(product_Type == 1){
+                old_value = parseFloat(current_qty) + 1;
+                remaining_qty = parseFloat(actual_qty)-old_value;
+                if(remaining_qty > 0){
+                    updateProductSubTotal(id,old_value)
+                    $("#cart_product_qty_"+id).val(parseFloat(old_value).toFixed(2));
+                    $("#stock_product"+id).text(remaining_qty.toFixed(2));
+                }
+                else{
+                    $("#cart_product_qty_"+id).val(parseFloat(actual_qty).toFixed(2));
+                    $("#stock_product"+id).text(0);
+                }
+            }else{
+                old_value = parseFloat(current_qty) + 1;
                 updateProductSubTotal(id,old_value)
                 $("#cart_product_qty_"+id).val(parseFloat(old_value).toFixed(2));
-                $("#stock_product"+id).text(remaining_qty.toFixed(2));
             }
-            else{
-                $("#cart_product_qty_"+id).val(parseFloat(actual_qty).toFixed(2));
-                $("#stock_product"+id).text(0);
-            }
+            
             product.style.pointerEvents = "auto";
+
+
 
             
             posCalcualtePrice();
@@ -745,10 +755,10 @@
                 posCalcualtePrice();
 
 
-                let  actual_qty = $("#original_stock_product"+id).val();
-                let  current_qty = $("#cart_product_qty_"+id).val();
-                remaining_qty = parseFloat(actual_qty).toFixed(2)-parseFloat(current_qty).toFixed(2);
-                $("#stock_product"+id).text(remaining_qty.toFixed(2));
+                // let  actual_qty = $("#original_stock_product"+id).val();
+                // let  current_qty = $("#cart_product_qty_"+id).val();
+                // remaining_qty = parseFloat(actual_qty).toFixed(2)-parseFloat(current_qty).toFixed(2);
+                // $("#stock_product"+id).text(remaining_qty.toFixed(2));
 
 
 
@@ -807,7 +817,7 @@
                      ||0);
 
                      var productStatus = $('input[name="products['+parseInt(id_loop)+'][product_status]"]:checked').val();;
-                     console.log(productStatus);
+                    //  console.log(productStatus);
                      if(productStatus == 'E' || productStatus == 'D' ){
                         current_qty = 0;
                         single_price = 0;
@@ -832,7 +842,7 @@
          let tax_amount = 0;
          if(parseInt(tax) > 0)
           tax_amount = parseFloat((subtotal/100)*tax);
-         console.log(typeof(tax_amount),typeof(total_amount) , typeof(discount) , typeof(shipping)  ,typeof(paid_amount));
+        //  console.log(typeof(tax_amount),typeof(total_amount) , typeof(discount) , typeof(shipping)  ,typeof(paid_amount));
        
          let remaining_amount=  (total_amount +tax_amount + shipping - (paid_amount||0));
          $("#remaining_amount").val(parseFloat(remaining_amount || 0).toFixed(2));
@@ -872,17 +882,33 @@
         qty = parseFloat(current_qty) + 1;
 
         remaining_qty = parseFloat(actual_qty)-qty;
-        console.log(actual_qty);
-        console.log(qty);
-        
-        if(remaining_qty >= 0){
-            $("#cart_product_qty_"+id).val(qty);
-            updateProductSubTotal(id,qty)
-            posCalcualtePrice();
-            $("#stock_product"+id).text(remaining_qty);
-        }else{
-            $("#cart_product_qty_"+id).val(parseFloat(actual_qty));
-            $("#stock_product"+id).text(0);
+        // console.log(actual_qty);
+        // console.log(qty);
+        let current_product_type = $("#product_type"+id).attr('rel');
+        if(current_product_type == 1){
+            if(remaining_qty >= 0){
+                $("#cart_product_qty_"+id).val(qty);
+                updateProductSubTotal(id,qty)
+                posCalcualtePrice();
+                $("#stock_product"+id).text(remaining_qty);
+            }else{
+                $("#cart_product_qty_"+id).val(parseFloat(actual_qty));
+                $("#stock_product"+id).text(0);
+            }
+    
+        }
+        else{
+
+            if(current_qty >= 0){
+                $("#cart_product_qty_"+id).val(qty);
+                updateProductSubTotal(id,qty)
+                posCalcualtePrice();
+                
+            }else{
+                $("#cart_product_qty_"+id).val(parseFloat(1));
+            }
+            
+
         }
 
         
@@ -894,6 +920,9 @@
         let current_qty = $("#cart_product_qty_"+id).val();
        
        
+        let current_product_type = $("#product_type"+id).attr('rel');
+        if(current_product_type == 1){
+
         if(current_qty > 1){
             qty = parseFloat(current_qty) - 1;
             remaining_qty = parseFloat(actual_qty)-parseFloat(qty);
@@ -903,34 +932,76 @@
             posCalcualtePrice();
             $("#stock_product"+id).text(remaining_qty);
         }
+        }
+
+        else{
+            qty = parseFloat(current_qty) - 1;
+            if(qty < 1){
+                qty = 1;
+            }
+            $("#cart_product_qty_"+id).val(qty);
+            updateProductSubTotal(id,qty)
+            posCalcualtePrice();
+
+        }
      }
      function ManualUpdate(id){
         let  actual_qty = $("#original_stock_product"+id).val();
         let current_qty = $("#cart_product_qty_"+id).val();
-        if(current_qty > 0){
+        let current_product_type = $("#product_type"+id).attr('rel');
 
-            remaining_qty = parseFloat(actual_qty)-parseFloat(current_qty);
-        
-            if(remaining_qty >= 0){
-                $("#cart_product_qty_"+id).val(current_qty);
-                updateProductSubTotal(id,current_qty)
-                posCalcualtePrice();
-                $("#stock_product"+id).text(remaining_qty);
-            }else{
-                $("#cart_product_qty_"+id).val(parseFloat(actual_qty));
-                $("#stock_product"+id).text(0);
+        if(current_product_type == 1){
+
+            if(current_qty > 0){
+
+                remaining_qty = parseFloat(actual_qty)-parseFloat(current_qty);
+            
+                if(remaining_qty >= 0){
+                    $("#cart_product_qty_"+id).val(current_qty);
+                    updateProductSubTotal(id,current_qty)
+                    posCalcualtePrice();
+                    $("#stock_product"+id).text(remaining_qty);
+                }else{
+                    $("#cart_product_qty_"+id).val(parseFloat(actual_qty));
+                    $("#stock_product"+id).text(0);
+                }
+    
             }
+            else{
+                $("#cart_product_qty_"+id).val(1);
+                let current_qty = $("#cart_product_qty_"+id).val();
+                remaining_qty = parseFloat(actual_qty)-parseFloat(current_qty);
+                updateProductSubTotal(id,current_qty)
+                    posCalcualtePrice();
+                    $("#stock_product"+id).text(remaining_qty);
+            }
+            
 
         }
         else{
-            $("#cart_product_qty_"+id).val(1);
-            let current_qty = $("#cart_product_qty_"+id).val();
-            remaining_qty = parseFloat(actual_qty)-parseFloat(current_qty);
-            updateProductSubTotal(id,current_qty)
-                posCalcualtePrice();
-                $("#stock_product"+id).text(remaining_qty);
+
+
+            if(current_qty > 0){
+
+                
+            
+                
+                    $("#cart_product_qty_"+id).val(current_qty);
+                    updateProductSubTotal(id,current_qty)
+                    posCalcualtePrice();
+                   
+    
+            }
+            else{
+                $("#cart_product_qty_"+id).val(1);
+                let current_qty = $("#cart_product_qty_"+id).val();
+                updateProductSubTotal(id,current_qty)
+                    posCalcualtePrice();
+                   
+            }
+
+
         }
-        
         
         
         
@@ -946,7 +1017,7 @@
             product_id  = event.target.id;
             parts = product_id.split('_');
             if(event.target && event.target.id === 'cart_product_qty_'+parts[3]){
-                console.log(parts[3]);
+                // console.log(parts[3]);
 
                 ManualUpdate(parts[3]);
             }
@@ -984,7 +1055,7 @@
             totalrecord = $('.totalrecord-settings').length;
          var div = $(".setting > .setting-row:last");
          FirstRowId = div.attr('id');
-         console.log(FirstRowId);
+        //  console.log(FirstRowId);
          lastRow = FirstRowId.split("setting-row");
 
 
@@ -999,7 +1070,7 @@
             dataType: 'html',
 
             success: function (data) {
-                console.log(data);
+                // console.log(data);
 
                 var last_product_id = $("#" + parseInt(lastRow[1])+ "-product_id").val();
 

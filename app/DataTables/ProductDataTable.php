@@ -29,6 +29,16 @@ class ProductDataTable extends DataTable
             ->editColumn('image', function ($row) {
                 return image('', $row->image, ['class=" border border-1"', 'style="height: 30px; width: 30px !important"']);
             })
+            ->editColumn('is_Deal', function ($row) {
+                $is_deal = 'Product';
+                $class = 'bg-warning text-dark';
+                if($row->is_deal==0){
+                    $is_deal = 'Deal';
+                    $class = 'bg-info text-dark';
+                }
+                
+                return '<span class="badge '.$class.'">'.$is_deal.'</span>';
+            })
 
             // ->editColumn('name', function ($row) {
             //     return $row->name;
@@ -82,7 +92,7 @@ class ProductDataTable extends DataTable
 
                 return ($row->stock <= $row->stock_alert) ? 'bg-alert' : 'bg-transparent';
             })
-            ->rawColumns(['image', 'action']);
+            ->rawColumns(['image', 'action','is_Deal']);
     }
 
     public function query(Product $model)
@@ -253,7 +263,7 @@ class ProductDataTable extends DataTable
             Column::make('DT_RowIndex')->title(__('products.id'))->searchable(false)->orderable(false),
             Column::make('product_code')->title(__('products.product_code')),
             Column::make('image')->title(__('products.image'))->orderable(false),
-
+            Column::make('is_Deal')->title(__('products.is_Deal')),
             Column::make('name')->title(__('products.name')),
             Column::make('stock')->title(__('products.stock')),
             Column::make('stock_alert')->title(__('products.stock_alert')),

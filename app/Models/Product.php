@@ -27,6 +27,14 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\ProductionHistory');
     }
+
+    public function dealProducts()
+    {
+        return $this->hasMany(DealProduct::class)
+        ->join('products', 'products.id', '=', 'deal_products.deal_product_id');
+    }
+
+
     // public function getCreatedAtPSTAttribute()
     // {
     //     return \Carbon\Carbon::parse($this->attributes['created_at'])->timezone('Asia/Karachi')->format('Y-m-d H:i:s');

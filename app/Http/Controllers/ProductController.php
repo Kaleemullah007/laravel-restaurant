@@ -152,7 +152,7 @@ class ProductController extends Controller
      */
     public function create(): View
     {
-        $products = Product::get();
+        $products = Product::where('is_deal', 1)->get();
 
         return view('pages.create-product', compact('products'));
     }
@@ -164,6 +164,8 @@ class ProductController extends Controller
     {
 
         // dd(mime_content_type($request->file('image')->getPathName()));
+        
+        // dd($request->validated());
         if(!$request->is_product_value){
             $this->dealService->createDeal($request);
             $product = 'Deal';
@@ -188,6 +190,7 @@ class ProductController extends Controller
                 $data['image'] = $path;
     
             }
+            $data['is_deal'] = $request->is_product_value;
     
             $products = Product::create($data);
             $request->session()->flash('success', 'Product created successfully.');
@@ -213,7 +216,10 @@ class ProductController extends Controller
      */
     public function edit(Product $product): View
     {
-        return view('pages.edit-product', compact('product'));
+
+        $product->load('dealProducts:deal_products.price as sprice,deal_products.*,products.*');
+        $products = Product::where('id', '!=', $product->id)->where('is_deal', 1)->latest()->get();
+        return view('pages.edit-product', compact('product','products'));
 
     }
 
@@ -224,9 +230,15 @@ class ProductController extends Controller
     {
 
         $this->authorize('update', $product);
-
+        $tproduct = 'Product';
         $data = $request->validated();
-
+        
+        if(!$request->is_product_value){
+            $this->dealService->updateDeal($request,$product);
+            $tproduct = 'Deal';
+           
+        }
+        else{
         if ($request->hasFile('image')) {
             // et the file with extension
             $image = $request->file('image');
@@ -243,9 +255,12 @@ class ProductController extends Controller
         } else {
             unset($data['image']);
         }
+        $data['is_deal'] = $request->is_product_value;
+        unset($data['is_product_value']);
         $products = Product::where('id', $product->id)->update($data);
-        $request->session()->flash('success', 'Product updated successfully.');
-
+       
+    }
+        $request->session()->flash('success', "$tproduct updated successfully.");
         //    return redirect('product/'.$product->id.'/edit');
         return to_route('product.index');
     }

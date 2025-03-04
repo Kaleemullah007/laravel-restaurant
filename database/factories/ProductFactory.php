@@ -27,6 +27,9 @@ class ProductFactory extends Factory
             'stock_alert' => 5,
             'owner_id' => 1,
             'variation' => '',
+            'is_deal'=>1,
+            'status'=>1,
+          
 
         ];
     }

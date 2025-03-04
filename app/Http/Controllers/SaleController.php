@@ -34,6 +34,7 @@ class SaleController extends Controller
 
     public function index(SaleDataTable $dataTable)
     {
+       
         // dd(Sale::with(['customer', 'products'])->get());
         $customer_id = request()->query('customer_id', null);
         $currentPage = request()->query('page', 1);
@@ -192,15 +193,41 @@ class SaleController extends Controller
      */
     public function pos(): View
     {
+        // dd(Carbon::now()->format('Y-m-d H:i:s'));
         $sale = Sale::with('Products', 'Customer')->latest()->first();
         $hide = true;
-        $products = Product::where('stock', '>', 0)->latest()->get();
-        $deals = Deal::where('status', true)->whereDate('start_time', '<=', Carbon::now())
-            ->whereDate('end_time', '>=', Carbon::now())->latest()->get();
+        $currentDateTime = Carbon::now();
+        
+        $products = Product::where('status', 1)
+            ->where(function($query) use ($currentDateTime) {
+                $query->where(function($q) {
+                    // Regular in-stock deals
+                    $q->where('stock', '>', 0)
+                      ->where('is_deal', 1)
+                      ->where('status', 1);
+                })
+                ->orWhere(function($q) use ($currentDateTime) {
+                    // Non-deal products with valid time range
+                    $q->where('is_deal', 0)
+                      ->where(function($timeQ) use ($currentDateTime) {
+                          $timeQ->where(function($normalQ) use ($currentDateTime) {
+                              $normalQ->where('start_time', '<=', $currentDateTime)
+                                     ->where('end_time', '>', $currentDateTime)->where('status', 1);
+                          })
+                          ->orWhere('is_always', 1)->where('status', 1);;
+                      });
+                });
+            })
+            ->latest()
+            ->get();
+        // $deals = Deal::where('status', true)
+        // // ->whereDate('start_time', '<=', Carbon::now())
+        // //     ->whereDate('end_time', '>=', Carbon::now())
+        //     ->latest()->get();
         $customers = Customer::where('user_type', 'customer')
             ->get();
 
-        return view('pages.pos', compact('products', 'customers', 'sale', 'deals'));
+        return view('pages.pos', compact('products', 'customers', 'sale'));
     }
 
     /**
@@ -322,7 +349,10 @@ class SaleController extends Controller
                 $temp['sale_id'] = 0;  // $sales->id
                 $temp['qty'] = $products_array['qty'];
                 $sub_total_cost += $products_array['qty'] * $DBProducts[$products_array['product_id']]->price;
-                $DBProducts[$products_array['product_id']]->decrement('stock', $products_array['qty']);
+                if($DBProducts[$products_array['product_id']]->is_manageable_stock == 1){
+                    $DBProducts[$products_array['product_id']]->decrement('stock', $products_array['qty']);
+                }
+                
                 $temp['cost_price'] = $DBProducts[$products_array['product_id']]->price;
                 $temp['sale_price'] = $products_array['sale_price'];
                 $sale_products[] = $temp;
@@ -644,12 +674,37 @@ class SaleController extends Controller
 
     public function addNewRowPos(Request $request)
     {
-        $product = Product::where('stock', '>', 0)->where('id', $request->product_id)->first();
-        $deals = Deal::where('status', true)
+        $product = Product::
+        
+        where(function($query) use($request){
+            $query->where('id', $request->product_id)->where('stock', '>', 0)->where('is_deal', 1);
+        })->orwhere(function($query) use($request){
+            $query->where('id', $request->product_id)
+            ->where('is_deal', 0)
             ->whereDate('start_time', '<=', Carbon::now())
-            ->whereDate('end_time', '>=', Carbon::now())
-            ->where('id', $request->deal_id)
-            ->latest()->first();
+            ->whereDate('end_time', '>=', Carbon::now());
+        })
+        ->orwhere(function($query) use($request){
+            $query
+            ->where('id', $request->product_id)
+            ->where('is_always', 1)
+            ->where('is_deal', 0)
+            ->whereDate('start_time', '<=', Carbon::now())
+            ->whereDate('end_time', '>=', Carbon::now());
+        })
+        ->
+        where('status', 1)
+        ->latest()
+        
+        
+        
+        
+        ->first();
+        // $deals = Deal::where('status', true)
+        //     ->whereDate('start_time', '<=', Carbon::now())
+        //     ->whereDate('end_time', '>=', Carbon::now())
+        //     ->where('id', $request->deal_id)
+        //     ->latest()->first();
 
         $html = view('pages.pos-row', compact('product'))->render();
 

@@ -23,16 +23,17 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
 
+     
         $deal = [
             'deal_name' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
+            'start_time' => ['nullable', 'date'], // Optional but must be a valid date
+            'end_time' => ['nullable', 'date', 'after:start_time'], // Optional but must be after start_time if provided
             'deal_price' => 'required',
             'status' => 'required',
             'productss' => 'required|array',
-            'products.*.product_id' => 'required|numeric',
-            'products.*.qty' => 'required|decimal:0,2|gte:1',
-            'products.*.is_swappable' => 'nullable|boolean',
+            'productss.*.product_id' => 'required|numeric',
+            'productss.*.quantity' => 'required|decimal:0,2|gte:1',
+            'productss.*.is_swappable' => 'nullable|in:true,false,1,0,on,off',
             'is_always' => 'nullable|boolean',
             'owner_id' => 'required',
             'is_product_value' => 'required|boolean',
@@ -66,7 +67,9 @@ class StoreProductRequest extends FormRequest
             'image' => 'sometimes|image|mimes:jpg,png,jpeg,gif,svg',
             'variation' => 'nullable|string',
             'unit' => 'required|string',
-            'is_product_value' => 'required|boolean',
+            'is_product_value' => 'required|in:true,false,1,0,on,off',
+            'is_stock_manageable' => 'required|boolean',
+
         ];
     }
 
@@ -88,10 +91,18 @@ class StoreProductRequest extends FormRequest
                 'product_code' => (is_null($this->deal_code) || empty($this->deal_code)) ? productCode() : $this->deal_code,
             ]);
         } else {
+            $stock = false;
+            if(isset($this->is_stock_manageable)){
+                $stock = true;
+            }
+            
             $this->merge([
                 'owner_id' => $owner_id,
                 'product_code' => (is_null($this->product_code) || empty($this->product_code)) ? productCode() : $this->product_code,
+                'is_stock_manageable'=>$stock,
             ]);
+
+            
         }
     }
 }
