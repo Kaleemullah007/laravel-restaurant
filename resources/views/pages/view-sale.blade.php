@@ -62,7 +62,17 @@
           <tbody>
             @foreach ($sales->Products as $sale )
             <tr>
-              <td class="service">{{$sale->product_name}}</td>
+              <td class="service">{{$sale->product_name}}
+                <br>
+                @if($sale->deal_products)
+                  @foreach ($sale->deal_products as $key => $deal_product)
+                    <span> {{$key+1}} -- {{$deal_product['product_name']}} - {{$deal_product['quantity']}}</span>
+                    <br>
+                  @endforeach
+
+                
+                @endif
+              </td>
               <td class="unit">{{auth()->user()->currency}}{{$sale->sale_price}}</td>
               <td class="qty">{{$sale->qty}}</td>
               <td class="total">{{auth()->user()->currency}}{{$sale->sale_price*$sale->qty}}</td>

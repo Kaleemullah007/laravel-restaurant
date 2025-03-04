@@ -33,7 +33,7 @@ class ProductStockRule implements ValidationRule
         $errorText = '';
         foreach ($products as $index => $products_array) {
 
-            if ($products_array['product_id'] == 'Choose') {
+            if ($products_array['product_id'] == 'Choose' ||  $DBProducts[$products_array['product_id']]->is_deal ==0) {
                 continue;
             }
             if ($DBProducts[$products_array['product_id']]->stock < $products_array['qty']) {

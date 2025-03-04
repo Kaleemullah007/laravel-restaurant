@@ -20,7 +20,10 @@ class SaleProduct extends Model
         'sale_price',
         'employee_id',
         'unit',
+        'deal_products',
     ];
+
+    protected $casts = ['deal_products' => 'array'];
 
     public function Product(): BelongsTo
     {
