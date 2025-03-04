@@ -31,9 +31,13 @@ class ProductDataTable extends DataTable
             })
             ->editColumn('is_Deal', function ($row) {
                 $is_deal = 'Product';
-                if($row->is_deal==0)
-                $is_deal = 'Deal';
-                return '<span>'.$is_deal.'</span>';
+                $class = 'bg-warning text-dark';
+                if($row->is_deal==0){
+                    $is_deal = 'Deal';
+                    $class = 'bg-info text-dark';
+                }
+                
+                return '<span class="badge '.$class.'">'.$is_deal.'</span>';
             })
 
             // ->editColumn('name', function ($row) {

@@ -152,7 +152,7 @@ class ProductController extends Controller
      */
     public function create(): View
     {
-        $products = Product::get();
+        $products = Product::where('is_deal', 1)->get();
 
         return view('pages.create-product', compact('products'));
     }
@@ -217,7 +217,7 @@ class ProductController extends Controller
     {
 
         $product->load('dealProducts:deal_products.price as sprice,deal_products.*,products.*');
-        $products = Product::where('id', '!=', $product->id)->latest()->get();
+        $products = Product::where('id', '!=', $product->id)->where('is_deal', 1)->latest()->get();
         return view('pages.edit-product', compact('product','products'));
 
     }
