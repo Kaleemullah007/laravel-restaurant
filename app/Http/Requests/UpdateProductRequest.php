@@ -34,7 +34,7 @@ class UpdateProductRequest extends FormRequest
             'productss.*.is_swappable' => 'nullable|in:true,false,1,0,on,off',
             'is_always' => 'nullable|boolean',
             'owner_id' => 'required',
-           'is_product_value' => 'required|in:true,false,1,0,on,off',
+            'is_product_value' => 'required|in:true,false,1,0,on,off',
             'product_code' => [
                 'required',
                 'string', Rule::unique('products', 'product_code')
@@ -48,7 +48,6 @@ class UpdateProductRequest extends FormRequest
         if ($this->is_product_value == 0) {
             return $deal;
         }
-
 
         return [
             'sale_price' => 'required|gt:0',
@@ -96,14 +95,14 @@ class UpdateProductRequest extends FormRequest
             ]);
         } else {
             $stock = false;
-            if(isset($this->is_stock_manageable)){
+            if (isset($this->is_stock_manageable)) {
                 $stock = true;
             }
-            
+
             $this->merge([
                 'owner_id' => $owner_id,
                 'product_code' => (is_null($this->product_code) || empty($this->product_code)) ? productCode() : $this->product_code,
-                'is_stock_manageable'=>$stock,
+                'is_stock_manageable' => $stock,
             ]);
         }
 

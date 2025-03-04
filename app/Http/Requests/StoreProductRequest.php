@@ -23,7 +23,6 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
 
-     
         $deal = [
             'deal_name' => 'required',
             'start_time' => ['nullable', 'date'], // Optional but must be a valid date
@@ -92,17 +91,16 @@ class StoreProductRequest extends FormRequest
             ]);
         } else {
             $stock = false;
-            if(isset($this->is_stock_manageable)){
+            if (isset($this->is_stock_manageable)) {
                 $stock = true;
             }
-            
+
             $this->merge([
                 'owner_id' => $owner_id,
                 'product_code' => (is_null($this->product_code) || empty($this->product_code)) ? productCode() : $this->product_code,
-                'is_stock_manageable'=>$stock,
+                'is_stock_manageable' => $stock,
             ]);
 
-            
         }
     }
 }

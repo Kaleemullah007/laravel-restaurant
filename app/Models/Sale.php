@@ -38,6 +38,10 @@ class Sale extends Model
         'serial_number',
         'serial_series',
         'tax_amount',
+        'order_type_id',
+        'order_status_id',
+        'order_status_name',
+        'order_type_name',
     ];
 
     protected $casts = ['due_date' => 'date'];
