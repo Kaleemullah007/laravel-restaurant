@@ -70,7 +70,7 @@ class UpdateProductRequest extends FormRequest
             'variation' => 'nullable|string',
             'unit' => 'required|string',
             'is_product_value' => 'required|in:true,false,1,0,on,off',
-
+            'is_stock_manageable' => 'required|boolean',
         ];
     }
 
@@ -95,9 +95,15 @@ class UpdateProductRequest extends FormRequest
                 'product_code' => (is_null($this->deal_code) || empty($this->deal_code)) ? productCode() : $this->deal_code,
             ]);
         } else {
+            $stock = false;
+            if(isset($this->is_stock_manageable)){
+                $stock = true;
+            }
+            
             $this->merge([
                 'owner_id' => $owner_id,
                 'product_code' => (is_null($this->product_code) || empty($this->product_code)) ? productCode() : $this->product_code,
+                'is_stock_manageable'=>$stock,
             ]);
         }
 

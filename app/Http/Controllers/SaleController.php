@@ -322,7 +322,10 @@ class SaleController extends Controller
                 $temp['sale_id'] = 0;  // $sales->id
                 $temp['qty'] = $products_array['qty'];
                 $sub_total_cost += $products_array['qty'] * $DBProducts[$products_array['product_id']]->price;
-                $DBProducts[$products_array['product_id']]->decrement('stock', $products_array['qty']);
+                if($DBProducts[$products_array['product_id']]->is_manageable_stock == 1){
+                    $DBProducts[$products_array['product_id']]->decrement('stock', $products_array['qty']);
+                }
+                
                 $temp['cost_price'] = $DBProducts[$products_array['product_id']]->price;
                 $temp['sale_price'] = $products_array['sale_price'];
                 $sale_products[] = $temp;

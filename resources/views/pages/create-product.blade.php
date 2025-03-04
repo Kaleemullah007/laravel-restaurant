@@ -156,6 +156,9 @@
                                      alt="Selected Image">
                             </div>
 
+                            <input type="checkbox" class="py-0" name="is_stock_manageable" id="is_stock_manageable" data-toggle="toggle" data-on="Stock Manageable"
+                            data-off="Not Stock Manageable" data-onstyle="info" data-offstyle="primary"  @if(old('is_stock_manageable',true)==true) checked @endif  >
+
                         </div>
                         </div>
 {{--  Deals --}}

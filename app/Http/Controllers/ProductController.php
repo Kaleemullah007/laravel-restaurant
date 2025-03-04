@@ -165,6 +165,7 @@ class ProductController extends Controller
 
         // dd(mime_content_type($request->file('image')->getPathName()));
         
+        // dd($request->validated());
         if(!$request->is_product_value){
             $this->dealService->createDeal($request);
             $product = 'Deal';
@@ -231,6 +232,7 @@ class ProductController extends Controller
         $this->authorize('update', $product);
         $tproduct = 'Product';
         $data = $request->validated();
+        
         if(!$request->is_product_value){
             $this->dealService->updateDeal($request,$product);
             $tproduct = 'Deal';
@@ -253,6 +255,8 @@ class ProductController extends Controller
         } else {
             unset($data['image']);
         }
+        $data['is_deal'] = $request->is_product_value;
+        unset($data['is_product_value']);
         $products = Product::where('id', $product->id)->update($data);
        
     }

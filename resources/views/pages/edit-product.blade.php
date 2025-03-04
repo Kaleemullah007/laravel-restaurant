@@ -159,9 +159,10 @@
                                 <img id="previewImage" src="{{ asset('storage/' . $product->image) }}"
                                     class="rounded-pill mt-1 ms-3 border border-3"
                                     style="height: 60px; width: 60px !important" alt="Uploaded Image">
-
-
                             </div>
+                            <input type="checkbox" class="py-0" name="is_stock_manageable" id="is_stock_manageable" data-toggle="toggle" data-on="Stock Manageable"
+                            data-off="Not Stock Manageable" data-onstyle="info" data-offstyle="primary"  @if(old('is_stock_manageable',$product->is_stock_manageable)==1) checked @endif  >
+
                         </div>
                         </div>
                            {{-- Deals --}}
