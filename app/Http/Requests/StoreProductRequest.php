@@ -23,11 +23,11 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
 
-       
+     
         $deal = [
             'deal_name' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
+            'start_time' => ['nullable', 'date'], // Optional but must be a valid date
+            'end_time' => ['nullable', 'date', 'after:start_time'], // Optional but must be after start_time if provided
             'deal_price' => 'required',
             'status' => 'required',
             'productss' => 'required|array',
@@ -67,7 +67,7 @@ class StoreProductRequest extends FormRequest
             'image' => 'sometimes|image|mimes:jpg,png,jpeg,gif,svg',
             'variation' => 'nullable|string',
             'unit' => 'required|string',
-            'is_product_value' => 'required|boolean',
+            'is_product_value' => 'required|in:true,false,1,0,on,off',
         ];
     }
 

@@ -30,7 +30,7 @@
                         <div class="col-sm-4 ps-0">
                             <input type="checkbox" class="py-0" name="is_product" id="is_product" data-toggle="toggle" data-on="Product"
                                 data-off="Deal" data-onstyle="info" data-offstyle="primary"  @if(old('is_product_value',1)==1) checked @endif  >
-                                <input type="hidden" name="is_product_value" id="is_product_value" value="{{old('is_product_value',0)}}"   >
+                                <input type="hidden" name="is_product_value" id="is_product_value" value="{{old('is_product_value',1)}}"   >
                         </div>
                         <div class="product_section" @if(old('is_product_value',1)==0) style="display: none" @endif >  
                         <div class="row mt-3">

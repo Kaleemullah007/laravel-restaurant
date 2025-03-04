@@ -164,6 +164,7 @@ class ProductController extends Controller
     {
 
         // dd(mime_content_type($request->file('image')->getPathName()));
+        
         if(!$request->is_product_value){
             $this->dealService->createDeal($request);
             $product = 'Deal';
@@ -188,6 +189,7 @@ class ProductController extends Controller
                 $data['image'] = $path;
     
             }
+            $data['is_deal'] = $request->is_product_value;
     
             $products = Product::create($data);
             $request->session()->flash('success', 'Product created successfully.');

@@ -24,8 +24,8 @@ class UpdateProductRequest extends FormRequest
     {
         $deal = [
             'deal_name' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
+            'start_time' => ['nullable', 'date'], // Optional but must be a valid date
+            'end_time' => ['nullable', 'date', 'after:start_time'], // Optional but must be after start_time if provided
             'deal_price' => 'required',
             'status' => 'required',
             'productss' => 'required|array',
@@ -34,7 +34,7 @@ class UpdateProductRequest extends FormRequest
             'productss.*.is_swappable' => 'nullable|in:true,false,1,0,on,off',
             'is_always' => 'nullable|boolean',
             'owner_id' => 'required',
-            'is_product_value' => 'required|boolean',
+           'is_product_value' => 'required|in:true,false,1,0,on,off',
             'product_code' => [
                 'required',
                 'string', Rule::unique('products', 'product_code')
@@ -69,6 +69,7 @@ class UpdateProductRequest extends FormRequest
             'image' => 'sometimes|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'variation' => 'nullable|string',
             'unit' => 'required|string',
+            'is_product_value' => 'required|in:true,false,1,0,on,off',
 
         ];
     }
