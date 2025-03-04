@@ -32,11 +32,11 @@ class ProductDataTable extends DataTable
             ->editColumn('is_Deal', function ($row) {
                 $is_deal = 'Product';
                 $class = 'bg-warning text-dark';
-                if($row->is_deal==0){
+                if ($row->is_deal == 0) {
                     $is_deal = 'Deal';
                     $class = 'bg-info text-dark';
                 }
-                
+
                 return '<span class="badge '.$class.'">'.$is_deal.'</span>';
             })
 
@@ -92,7 +92,7 @@ class ProductDataTable extends DataTable
 
                 return ($row->stock <= $row->stock_alert) ? 'bg-alert' : 'bg-transparent';
             })
-            ->rawColumns(['image', 'action','is_Deal']);
+            ->rawColumns(['image', 'action', 'is_Deal']);
     }
 
     public function query(Product $model)

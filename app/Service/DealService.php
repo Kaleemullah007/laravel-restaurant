@@ -10,7 +10,7 @@ class DealService
     public function createDeal($request)
     {
         $all_data = $request->validated();
- 
+
         $deal_data = [
             'name' => $request->deal_name,
             'product_code' => $request->product_code,
@@ -21,10 +21,10 @@ class DealService
             'variation' => '',
             'unit' => '',
             'is_deal' => $request->is_product_value,
-            'is_always' => (boolean)$request->is_always,
-            'start_time' => $request->start_time??null,
-            'end_time' => $request->end_time??null,
-            'status' => (boolean) $request->status,
+            'is_always' => (bool) $request->is_always,
+            'start_time' => $request->start_time ?? null,
+            'end_time' => $request->end_time ?? null,
+            'status' => (bool) $request->status,
         ];
 
         $deal_products_data = $all_data['productss'];
@@ -56,8 +56,7 @@ class DealService
             $deal_data['image'] = $path;
 
         }
-  
-      
+
         $product = Product::create($deal_data);
 
         $fdeal_products = array_map(function ($item) use ($product) {
@@ -66,6 +65,7 @@ class DealService
             return $item;
         }, $deal_products);
         DealProduct::insert($fdeal_products);
+
         return $product;
     }
 
@@ -83,19 +83,18 @@ class DealService
             'variation' => '',
             'unit' => '',
             'is_deal' => $request->is_product_value,
-            'is_always' => (boolean)$request->is_always,
+            'is_always' => (bool) $request->is_always,
             'start_time' => $request->start_time ?? null,
             'end_time' => $request->end_time ?? null,
-            'status' => (boolean) $request->status,
+            'status' => (bool) $request->status,
         ];
 
         $deal_products_data = $all_data['productss'];
         unset($all_data['productss']);
         $selected_products = Product::whereIn('id', array_keys($deal_products_data))->get()->pluck(null, 'id');
-        
+
         $price = 0;
-        
-        
+
         // Get existing deal products
         $existing_deal_products = DealProduct::where('product_id', $deal->id)
             ->pluck('id', 'deal_product_id')
@@ -103,11 +102,11 @@ class DealService
         // dd($deal_products_data,$existing_deal_products);
         $deal_products_to_update = [];
         $deal_products_to_create = [];
-        
+
         foreach ($deal_products_data as $product_id => $product) {
             $fProduct = $selected_products[$product['product_id']];
             $price += $fProduct->sale_price * $product['quantity'];
-            
+
             $product_data = [
                 'product_name' => $fProduct->name,
                 'price' => $fProduct->sale_price,
@@ -133,14 +132,13 @@ class DealService
 
         $deal_data['price'] = $price;
 
-
         // dd($deal_products_data,$existing_deal_products,$price);
         if ($request->hasFile('image')) {
             // Delete old image if exists
             if ($deal->image && file_exists(public_path($deal->image))) {
                 unlink(public_path($deal->image));
             }
-            
+
             $image = $request->file('image');
             $filename = time().'.'.$image->getClientOriginalExtension();
             $path = $image->move('images', $filename, 'public');
@@ -158,13 +156,13 @@ class DealService
         }
 
         // Create new products
-        if (!empty($deal_products_to_create)) {
+        if (! empty($deal_products_to_create)) {
             DealProduct::insert($deal_products_to_create);
         }
-       
+
         // Delete products that are no longer in the deal
-        if (!empty($existing_deal_products)) {
-           
+        if (! empty($existing_deal_products)) {
+
             DealProduct::whereIn('id', array_values($existing_deal_products))->delete();
         }
 

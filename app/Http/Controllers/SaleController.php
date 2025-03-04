@@ -36,7 +36,7 @@ class SaleController extends Controller
 
     public function index(SaleDataTable $dataTable)
     {
-       
+
         // dd(Sale::with(['customer', 'products'])->get());
         $customer_id = request()->query('customer_id', null);
         $currentPage = request()->query('page', 1);
@@ -199,26 +199,26 @@ class SaleController extends Controller
         $sale = Sale::with('Products', 'Customer')->latest()->first();
         $hide = true;
         $currentDateTime = Carbon::now();
-        
+
         $products = Product::where('status', 1)
-            ->where(function($query) use ($currentDateTime) {
-                $query->where(function($q) {
+            ->where(function ($query) use ($currentDateTime) {
+                $query->where(function ($q) {
                     // Regular in-stock deals
                     $q->where('stock', '>', 0)
-                      ->where('is_deal', 1)
-                      ->where('status', 1);
+                        ->where('is_deal', 1)
+                        ->where('status', 1);
                 })
-                ->orWhere(function($q) use ($currentDateTime) {
-                    // Non-deal products with valid time range
-                    $q->where('is_deal', 0)
-                      ->where(function($timeQ) use ($currentDateTime) {
-                          $timeQ->where(function($normalQ) use ($currentDateTime) {
-                              $normalQ->where('start_time', '<=', $currentDateTime)
-                                     ->where('end_time', '>', $currentDateTime)->where('status', 1);
-                          })
-                          ->orWhere('is_always', 1);
-                      });
-                });
+                    ->orWhere(function ($q) use ($currentDateTime) {
+                        // Non-deal products with valid time range
+                        $q->where('is_deal', 0)
+                            ->where(function ($timeQ) use ($currentDateTime) {
+                                $timeQ->where(function ($normalQ) use ($currentDateTime) {
+                                    $normalQ->where('start_time', '<=', $currentDateTime)
+                                        ->where('end_time', '>', $currentDateTime)->where('status', 1);
+                                })
+                                    ->orWhere('is_always', 1);
+                            });
+                    });
             })
             ->latest()
             ->get();
@@ -351,16 +351,14 @@ class SaleController extends Controller
                 $temp['sale_id'] = 0;  // $sales->id
                 $temp['qty'] = $products_array['qty'];
                 $sub_total_cost += $products_array['qty'] * $DBProducts[$products_array['product_id']]->price;
-                if($DBProducts[$products_array['product_id']]->is_manageable_stock == 1){
+                if ($DBProducts[$products_array['product_id']]->is_manageable_stock == 1) {
                     $DBProducts[$products_array['product_id']]->decrement('stock', $products_array['qty']);
                 }
-                
+
                 $temp['deal_products'] = null;
-                if($DBProducts[$products_array['product_id']]->is_deal == 0){
+                if ($DBProducts[$products_array['product_id']]->is_deal == 0) {
                     $temp['deal_products'] = $this->dealProducts($DBProducts[$products_array['product_id']]);
                 }
-              
-
 
                 $temp['cost_price'] = $DBProducts[$products_array['product_id']]->price;
                 $temp['sale_price'] = $products_array['sale_price'];
@@ -406,17 +404,12 @@ class SaleController extends Controller
             }
 
             $order_status = OrderStatus::where('id', 1)->first();
-            $order_type  = OrderType::where('id', 1)->first();
+            $order_type = OrderType::where('id', 1)->first();
 
-            
             $sale_data['order_type_id'] = $order_type->id;
-            $sale_data['order_type_name']=$order_type->name;
+            $sale_data['order_type_name'] = $order_type->name;
             $sale_data['order_status_id'] = $order_status->id;
-            $sale_data['order_status_name']=$order_status->name;
-            
-
-            
-          
+            $sale_data['order_status_name'] = $order_status->name;
 
             $sales = Sale::create($sale_data);
 
@@ -427,9 +420,8 @@ class SaleController extends Controller
                 return $item;
             }, $sale_products);
 
-           
             SaleProduct::insert($sale_products);
-             
+
             // $sales = Sale::with(['Products','Customer'])->find($sales->id);
             // if($sales->Customer->email != null && filter_var($sales->Customer->email, FILTER_VALIDATE_EMAIL))
             //     Mail::to($sales->Customer->email)->send(new SendInvoice($sales,'New Order '));
@@ -448,6 +440,7 @@ class SaleController extends Controller
             DB::rollBack();
             if ($request->ajax()) {
                 info($e->getMessage());
+
                 return response()->json(['id' => null, 'message' => 'Order not placed !'.$e->getMessage(), 'error' => true]);
             }
             $request->session()->flash('warning', $e->getMessage());
@@ -470,7 +463,6 @@ class SaleController extends Controller
         $sales = $sale->load('Products', 'Customer');
         $hide = true;
         $tempalte = auth()->user()->invoice_template;
-        
 
         return view('pages.'.$tempalte, compact('sales', 'hide'));
     }
@@ -698,32 +690,24 @@ class SaleController extends Controller
 
     public function addNewRowPos(Request $request)
     {
-        $product = Product::
-        
-        where(function($query) use($request){
+        $product = Product::where(function ($query) use ($request) {
             $query->where('id', $request->product_id)->where('stock', '>', 0)->where('is_deal', 1)->where('status', 1);
-        })->orwhere(function($query) use($request){
+        })->orwhere(function ($query) use ($request) {
             $query->where('id', $request->product_id)
-            ->where('is_deal', 0)
-            ->whereDate('start_time', '<=', Carbon::now())
-            ->whereDate('end_time', '>=', Carbon::now())
-            ->where('status', 1)
-            ;
+                ->where('is_deal', 0)
+                ->whereDate('start_time', '<=', Carbon::now())
+                ->whereDate('end_time', '>=', Carbon::now())
+                ->where('status', 1);
 
         })
-        ->orwhere(function($query) use($request){
-            $query->where('id', $request->product_id)
-            ->orWhere('is_always', 1)
-            ->where('status', 1);
+            ->orwhere(function ($query) use ($request) {
+                $query->where('id', $request->product_id)
+                    ->orWhere('is_always', 1)
+                    ->where('status', 1);
 
-        })
-        
-        ->latest()
-        
-        
-        
-        
-        ->first();
+            })
+            ->latest()
+            ->first();
         // $deals = Deal::where('status', true)
         //     ->whereDate('start_time', '<=', Carbon::now())
         //     ->whereDate('end_time', '>=', Carbon::now())
@@ -783,21 +767,18 @@ class SaleController extends Controller
         return [$series, $serial_number, $serial_series];
     }
 
-
-
-
     public function dealProducts($product)
     {
         $product->load('dealProducts');
-        
-        $dealProductsJson = $product->dealProducts->map(function($dealProduct) {
+
+        $dealProductsJson = $product->dealProducts->map(function ($dealProduct) {
             return [
                 'id' => $dealProduct->id,
                 'product_name' => $dealProduct->product_name,
                 'price' => $dealProduct->price,
                 'discount_price' => $dealProduct->discount_price,
                 'quantity' => $dealProduct->quantity,
-                'is_swappable' => $dealProduct->is_swappable
+                'is_swappable' => $dealProduct->is_swappable,
             ];
         })->toJson();
 

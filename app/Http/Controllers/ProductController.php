@@ -164,42 +164,42 @@ class ProductController extends Controller
     {
 
         // dd(mime_content_type($request->file('image')->getPathName()));
-        
+
         // dd($request->validated());
-        if(!$request->is_product_value){
+        if (! $request->is_product_value) {
             $this->dealService->createDeal($request);
             $product = 'Deal';
-        }
-        else{
+        } else {
             $id = request('redirectid');
             $product = 'Product';
             $data = $request->validated();
-    
+
             if ($request->hasFile('image')) {
                 // et the file with extension
                 $image = $request->file('image');
-    
+
                 // Generate a unique file name
                 $filename = time().'.'.$image->getClientOriginalExtension();
-    
+
                 // Store the image in the 'public/images' directory
                 $path = $image->move('images', $filename, 'public');
-    
+
                 // Optionally, save the image path to the database
                 // Example: You can save the path $path in your database
                 $data['image'] = $path;
-    
+
             }
             $data['is_deal'] = $request->is_product_value;
-    
+
             $products = Product::create($data);
             $request->session()->flash('success', 'Product created successfully.');
             if ($id) {
                 return redirect('product?id='.$id);
             }
-    
+
         }
         $request->session()->flash('success', $product.' created successfully.');
+
         return redirect('product');
     }
 
@@ -219,7 +219,8 @@ class ProductController extends Controller
 
         $product->load('dealProducts:deal_products.price as sprice,deal_products.*,products.*');
         $products = Product::where('id', '!=', $product->id)->where('is_deal', 1)->latest()->get();
-        return view('pages.edit-product', compact('product','products'));
+
+        return view('pages.edit-product', compact('product', 'products'));
 
     }
 
@@ -232,35 +233,35 @@ class ProductController extends Controller
         $this->authorize('update', $product);
         $tproduct = 'Product';
         $data = $request->validated();
-        
-        if(!$request->is_product_value){
-            $this->dealService->updateDeal($request,$product);
+
+        if (! $request->is_product_value) {
+            $this->dealService->updateDeal($request, $product);
             $tproduct = 'Deal';
-           
-        }
-        else{
-        if ($request->hasFile('image')) {
-            // et the file with extension
-            $image = $request->file('image');
 
-            // Generate a unique file name
-            $filename = time().'.'.$image->getClientOriginalExtension();
-
-            // Store the image in the 'public/images' directory
-            $path = $image->move('images', $filename, 'public');
-
-            // Optionally, save the image path to the database
-            // Example: You can save the path $path in your database
-            $data['image'] = $path;
         } else {
-            unset($data['image']);
+            if ($request->hasFile('image')) {
+                // et the file with extension
+                $image = $request->file('image');
+
+                // Generate a unique file name
+                $filename = time().'.'.$image->getClientOriginalExtension();
+
+                // Store the image in the 'public/images' directory
+                $path = $image->move('images', $filename, 'public');
+
+                // Optionally, save the image path to the database
+                // Example: You can save the path $path in your database
+                $data['image'] = $path;
+            } else {
+                unset($data['image']);
+            }
+            $data['is_deal'] = $request->is_product_value;
+            unset($data['is_product_value']);
+            $products = Product::where('id', $product->id)->update($data);
+
         }
-        $data['is_deal'] = $request->is_product_value;
-        unset($data['is_product_value']);
-        $products = Product::where('id', $product->id)->update($data);
-       
-    }
         $request->session()->flash('success', "$tproduct updated successfully.");
+
         //    return redirect('product/'.$product->id.'/edit');
         return to_route('product.index');
     }
