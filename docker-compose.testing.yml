@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  app:
+    environment:
+      - "APP_ENV=testing"
+      - "DB_CONNECTION=sqlite"
+      - "DB_DATABASE=:memory:"
+      - "CACHE_DRIVER=array"
+      - "SESSION_DRIVER=array"
+      - "QUEUE_CONNECTION=sync"
+      - "MAIL_MAILER=array"
+
+  # No MySQL needed for testing as we use SQLite in-memory
+  mysql:
+    profiles:
+      - donotstart
