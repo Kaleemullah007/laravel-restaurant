@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    environment:
+      - "APP_ENV=production"
+    volumes:
+      - production_storage:/var/www/html/storage
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+  mysql:
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-production_db}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME:-production_user}
+    volumes:
+      - production_mysql_data:/var/lib/mysql
+
+volumes:
+  production_storage:
+    driver: local
+  production_mysql_data:
+    driver: local

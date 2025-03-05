@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    environment:
+      - "APP_ENV=staging"
+    volumes:
+      - staging_storage:/var/www/html/storage
+
+  mysql:
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-staging_db}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME:-staging_user}
+    volumes:
+      - staging_mysql_data:/var/lib/mysql
+
+volumes:
+  staging_storage:
+    driver: local
+  staging_mysql_data:
+    driver: local

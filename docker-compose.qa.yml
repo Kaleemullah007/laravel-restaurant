@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    environment:
+      - "APP_ENV=qa"
+    volumes:
+      - qa_storage:/var/www/html/storage
+
+  mysql:
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-qa_db}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME:-qa_user}
+    volumes:
+      - qa_mysql_data:/var/lib/mysql
+
+volumes:
+  qa_storage:
+    driver: local
+  qa_mysql_data:
+    driver: local
